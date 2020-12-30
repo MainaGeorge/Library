@@ -1,4 +1,5 @@
-﻿using Library.EntityConfigurations;
+﻿using Library.Entities;
+using Library.EntityConfigurations;
 using Library.Models;
 using Microsoft.EntityFrameworkCore;
 

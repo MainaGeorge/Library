@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Library.Models;
+using Library.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
