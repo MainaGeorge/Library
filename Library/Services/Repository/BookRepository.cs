@@ -1,9 +1,9 @@
 ﻿using Library.Data;
 using Library.Entities;
 using Library.Services.IRepository;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 
 namespace Library.Services.Repository
 {
@@ -23,7 +23,10 @@ namespace Library.Services.Repository
 
         public IEnumerable<Book> GetBooksWithAuthors()
         {
-            return _context.Books.Include(b => b.Author).ToList();
+            return _context.Books
+                .Include(b => b.Author)
+                .OrderBy(b => b.Title)
+                .ToList();
         }
     }
 }

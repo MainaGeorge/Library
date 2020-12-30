@@ -28,7 +28,7 @@ namespace Library
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
-
+            services.AddCloudscribePagination();
             services.AddTransient<IBookRepository, BookRepository>();
             services.AddTransient<IAuthorRepository, AuthorRepository>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
