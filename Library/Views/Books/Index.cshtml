@@ -1,0 +1,12 @@
+﻿@model IEnumerable<Library.Entities.Book>
+
+
+@{
+    Layout = "_Layout";
+}
+
+
+@foreach (var book in Model)
+{
+    <h3> @book.Title by @book.Author.FirstName @book.Author.LastName</h3>
+}

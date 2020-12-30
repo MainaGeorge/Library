@@ -1,0 +1,12 @@
+﻿@using System.Security.Cryptography
+@model IEnumerable<Library.Entities.Author>
+
+@{
+    Layout = "_Layout";
+}
+
+
+@foreach (var author in Model)
+{
+    <h3> @author.FirstName - has written @author.Books.Count books</h3>
+}
