@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Library.Data;
 using Library.Services.IRepository;
 using Library.Services.Repository;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Library
@@ -33,6 +34,18 @@ namespace Library
             services.AddTransient<IAuthorRepository, AuthorRepository>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddDefaultTokenProviders()
+                .AddEntityFrameworkStores<AppDbContext>();
+
+            services.Configure<IdentityOptions>(opt =>
+            {
+                opt.User.RequireUniqueEmail = true;
+                opt.Password.RequireDigit = false;
+                opt.Password.RequireUppercase = false;
+                opt.Password.RequireNonAlphanumeric = false;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

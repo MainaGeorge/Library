@@ -19,10 +19,13 @@ namespace Library.Data
 
             modelBuilder.ApplyConfiguration(new AuthorConfigurations());
             modelBuilder.ApplyConfiguration(new BookConfigurations());
+            modelBuilder.ApplyConfiguration(new AppUserConfigurations());
         }
 
         public DbSet<Author> Authors { get; set; }
         public DbSet<Book> Books { get; set; }
+
+        public DbSet<AppUsers> Users { get; set; }
 
 
     }
