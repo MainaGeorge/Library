@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Library.Data;
 
 namespace Library.Entities
 {
@@ -19,6 +20,13 @@ namespace Library.Entities
         public int AuthorId { get; set; }
 
         public Author Author { get; set; }
+
+        [ForeignKey("Borrower")]
+        public string BorrowerId { get; set; }
+
+        public AppUsers Borrower { get; set; }
+
+        public bool IsAvailable { get; set; } = true;
 
     }
 }

@@ -1,4 +1,4 @@
-﻿@model cloudscribe.Pagination.Models.PagedResult<Library.Entities.Book>
+﻿@model cloudscribe.Pagination.Models.PagedResult<Library.Data.AppUsers>
 
 
 @{
@@ -11,24 +11,22 @@
 <table class="table table-striped table-bordered">
     <thead>
         <tr>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Available</th>
+            <th>First Name</th>
+            <th>Last Name</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var book in Model.Data)
+        @foreach (var user in Model.Data)
         {
-            var isAvailable = book.IsAvailable ? "Yes" : "No";
             <tr>
-                <td>@book.Title</td>
-                <td>@book.Author.FirstName @book.Author.LastName</td>
-                <td> @isAvailable </td>
+                <td>@user.FirstName</td>
+                <td>@user.LastName</td>
             </tr>
         }
     </tbody>
 
 </table>
+
 
 <div class="text-center d-flex justify-content-center align-items-center">
     <partial name="_PaginationPartial" view-data="ViewData" model="Model" />

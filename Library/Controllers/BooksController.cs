@@ -1,6 +1,5 @@
-﻿using cloudscribe.Pagination.Models;
-using Library.Entities;
-using Library.Services.IRepository;
+﻿using Library.Services.IRepository;
+using Library.Utility;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
@@ -19,19 +18,11 @@ namespace Library.Controllers
             _iUnitOfWork = iUnitOfWork;
             _host = host;
         }
-        public IActionResult Index(int pageSize = 8, int pageNumber = 1)
+        public IActionResult Index(int pageNumber = 1, int pageSize = 8)
         {
-            var skipItems = (pageNumber * pageSize) - pageSize;
             var books = _iUnitOfWork.BookRepository.GetBooksWithAuthors().ToList();
-            var query = books.Skip(skipItems).Take(pageSize);
-            var result = new PagedResult<Book>()
-            {
-                Data = query.ToList(),
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                TotalItems = books.Count()
+            var result = PaginateResult.PageResults(books, pageNumber, pageSize);
 
-            };
             return View(result);
         }
 

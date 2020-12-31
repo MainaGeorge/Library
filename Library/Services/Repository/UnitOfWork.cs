@@ -12,9 +12,12 @@ namespace Library.Services.Repository
             _context = context;
             BookRepository = new BookRepository(context);
             AuthorRepository = new AuthorRepository(context);
+            UserRepository = new UserRepository(context);
         }
         public IBookRepository BookRepository { get; }
         public IAuthorRepository AuthorRepository { get; }
+        public IUserRepository UserRepository { get; }
+
         public bool SaveChanges()
         {
             return _context.SaveChanges() > 0;
