@@ -69,3 +69,9 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+.isDisabled {
+    color: gray;
+    cursor: not-allowed;
+    opacity: 0.5;
+    text-decoration: none;
+}

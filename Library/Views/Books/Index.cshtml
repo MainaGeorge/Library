@@ -19,12 +19,12 @@
     <tbody>
         @foreach (var book in Model.Data)
         {
-            var notBorrowable = !book.IsAvailable;
+            var disabled = !book.IsAvailable ? "isDisabled btn-danger" : "btn-success";
             <tr>
                 <td>@book.Title</td>
                 <td>@book.Author.FirstName @book.Author.LastName</td>
                 <td>
-                    <button onclick="Borrow(@book.Id)" type="submit" class="btn btn-sm btn-primary" disabled="@notBorrowable">Borrow</button>
+                    <a id="@book.Id" onclick="borrow(@book.Id)" class="btn btn-sm @disabled">Borrow</a>
                 </td>
             </tr>
         }
@@ -35,3 +35,27 @@
 <div class="text-center d-flex justify-content-center align-items-center">
     <partial name="_PaginationPartial" view-data="ViewData" model="Model" />
 </div>
+
+@section Scripts
+{
+    @* <script type="text/javascript" src="js/borrow.js"></script> *@
+    <script>
+
+        function borrow(id) {
+            const url = `https://localhost:44399/api/borrow/${id}`;
+
+            $.ajax({
+                type: "GET",
+                url: url,
+                success: function (data) {
+                    if (data.success) {
+                        document.getById(`#${id}`).style.backgroundColor = "red";
+                    } else {
+                        alert("fail");
+                    }
+                }
+            });
+        }
+
+    </script>
+}

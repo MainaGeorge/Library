@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 
 namespace Library.Controllers
 {
@@ -35,9 +36,6 @@ namespace Library.Controllers
             return View("Data", applicationPath);
         }
 
-        [NonAction]
-        public void Borrow(int bookId)
-        {
-        }
+        
     }
 }
