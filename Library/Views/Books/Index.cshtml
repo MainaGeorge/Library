@@ -20,11 +20,14 @@
         @foreach (var book in Model.Data)
         {
             var disabled = !book.IsAvailable ? "isDisabled btn-danger" : "btn-success";
+            var enabled = book.IsAvailable ? "isDisabled btn-danger" : "btn-success";
+
             <tr>
                 <td>@book.Title</td>
                 <td>@book.Author.FirstName @book.Author.LastName</td>
                 <td>
-                    <a id="@book.Id" onclick="borrow(@book.Id)" class="btn btn-sm @disabled">Borrow</a>
+                    <a id="@book.Id" onclick='borrowOrReturn("borrowBook", @book.Id)' class="btn btn-sm @disabled">Borrow</a>
+                    <a id="@book.Id" onclick='borrowOrReturn("returnBook", @book.Id)' class="btn btn-sm @enabled }">Return</a>
                 </td>
             </tr>
         }
@@ -41,15 +44,15 @@
     @* <script type="text/javascript" src="js/borrow.js"></script> *@
     <script>
 
-        function borrow(id) {
-            const url = `https://localhost:44399/api/borrow/${id}`;
+        function borrowOrReturn(action, id) {
+            const url = `https://localhost:44399/api/book/${action}/${id}`;
 
             $.ajax({
                 type: "GET",
                 url: url,
                 success: function (data) {
                     if (data.success) {
-                        document.getById(`#${id}`).style.backgroundColor = "red";
+                        location.reload();
                     } else {
                         alert("fail");
                     }
