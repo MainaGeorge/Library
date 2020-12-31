@@ -29,5 +29,11 @@ namespace Library.ApiCalls
 
             return Ok(new { success = true, message = "success" });
         }
+
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            return Ok(_unitOfWork.BookRepository.GetBooksWithAuthors());
+        }
     }
 }

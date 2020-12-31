@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 
 namespace Library.Controllers
 {
@@ -19,14 +18,21 @@ namespace Library.Controllers
             _iUnitOfWork = iUnitOfWork;
             _host = host;
         }
+
+        [HttpGet]
         public IActionResult Index(int pageNumber = 1, int pageSize = 8)
         {
             var books = _iUnitOfWork.BookRepository.GetBooksWithAuthors().ToList();
             var result = PaginateResult.PageResults(books, pageNumber, pageSize);
 
             return View(result);
+
         }
 
+        public IActionResult DataTable()
+        {
+            return View();
+        }
 
         public IActionResult Data()
         {
@@ -36,6 +42,6 @@ namespace Library.Controllers
             return View("Data", applicationPath);
         }
 
-        
+
     }
 }

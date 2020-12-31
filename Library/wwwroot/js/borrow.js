@@ -1,19 +1,30 @@
-﻿$(document).ready(function () {
-    $(".borrow").click(function () {
-        const bookId = $("#borrow").val();
+﻿var dataTable;
 
-        $.ajax({
-            type: "GET",
-            url: `https://localhost:44399/Books/borrow/${bookId}`,
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (data) {
-                alert("done");
 
-            },
-            error: function (data) {
-                alert(data.responseText);
-            }
-        });
-    });
+$(document).ready(function () {
+    loadDataTable();
 });
+
+
+function loadDataTable() {
+    dataTable = $("#table").DataTable({
+        "processing": true,
+        "serverSide": true,
+        "filter": true,
+        "orderMulti": false,
+        "ajax": {
+            "url": "/api/Book",
+            "type": "GET",
+            "datatype": "json"
+        },
+        "columns": [
+            { "data": "title", "name": "title", "autoWidth": true },
+            { "data": "author.FirstName", "name": "author", autoWidth: true }
+        ],
+        "language": {
+            "emptyTable": "No data found."
+        },
+        "width": "100%"
+    });
+}
+
