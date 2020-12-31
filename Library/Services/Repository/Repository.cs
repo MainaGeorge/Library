@@ -29,5 +29,10 @@ namespace Library.Services.Repository
         {
             return _context.Set<T>().Find(id);
         }
+
+        public void Remove(T entity)
+        {
+            _context.Remove(entity);
+        }
     }
 }

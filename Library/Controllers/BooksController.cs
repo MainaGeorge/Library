@@ -34,5 +34,10 @@ namespace Library.Controllers
 
             return View("Data", applicationPath);
         }
+
+        [NonAction]
+        public void Borrow(int bookId)
+        {
+        }
     }
 }

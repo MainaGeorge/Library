@@ -7,5 +7,6 @@ namespace Library.Services.IRepository
         IEnumerable<T> GetAll();
         void Add(T entity);
         T GetById(int id);
+        void Remove(T entity);
     }
 }

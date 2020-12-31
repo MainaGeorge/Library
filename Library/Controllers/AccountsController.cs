@@ -13,7 +13,7 @@ namespace Library.Controllers
         {
             _unitOfWork = unitOfWork;
         }
-        public IActionResult Index(int pageNumber = 1, int pageSize = 6)
+        public IActionResult Index(int pageNumber = 1, int pageSize = 8)
         {
             var users = _unitOfWork.UserRepository.GetAll().ToList();
 
