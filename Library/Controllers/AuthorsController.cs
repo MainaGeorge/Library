@@ -1,8 +1,10 @@
 ﻿using Library.Services.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Library.Controllers
 {
+    [Authorize]
     public class AuthorsController : Controller
     {
         private readonly IUnitOfWork _iUnitOfWork;

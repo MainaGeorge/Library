@@ -3,9 +3,11 @@ using Library.Utility;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Library.Controllers
 {
+    [Authorize]
     public class BooksController : Controller
     {
         private readonly IUnitOfWork _iUnitOfWork;

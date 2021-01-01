@@ -1,4 +1,6 @@
+using AutoMapper;
 using Library.Data;
+using Library.Mappings;
 using Library.Services.IRepository;
 using Library.Services.Repository;
 using Microsoft.AspNetCore.Builder;
@@ -55,6 +57,7 @@ namespace Library
                 opt.Password.RequireNonAlphanumeric = false;
             });
 
+            services.AddAutoMapper(typeof(AutoMappings));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

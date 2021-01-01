@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Library.Controllers
 {
+    [AllowAnonymous]
     public class AccountsController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
