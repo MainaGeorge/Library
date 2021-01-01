@@ -24,7 +24,7 @@ namespace Library.Entities
         [ForeignKey("Borrower")]
         public string BorrowerId { get; set; }
 
-        public AppUsers Borrower { get; set; }
+        public ApplicationUser Borrower { get; set; }
 
         public bool IsAvailable { get; set; } = true;
 

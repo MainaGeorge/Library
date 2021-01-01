@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Identity;
 
 namespace Library.Data
 {
-    public class AppUsers : IdentityUser
+    public class ApplicationUser : IdentityUser
     {
         [Required]
         public string FirstName { get; set; }
@@ -12,7 +12,9 @@ namespace Library.Data
         [Required]
         public string LastName { get; set; }
 
+
+        [DataType(DataType.Date)]
         [Required]
-        public DateTime DateOfBirth { get; set; }   
+        public DateTime DateOfBirth { get; set; }
     }
 }

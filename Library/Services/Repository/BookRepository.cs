@@ -25,7 +25,7 @@ namespace Library.Services.Repository
         {
             return _context.Books
                 .Include(b => b.Author)
-                .OrderBy(b => b.Title)
+                .OrderBy(b => b.IsAvailable)
                 .ToList();
         }
     }

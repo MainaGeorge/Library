@@ -2,8 +2,7 @@
 
 namespace Library.Services.IRepository
 {
-    public interface IUserRepository  : IRepository<AppUsers>
+    public interface IUserRepository  : IRepository<ApplicationUser>
     {
-        AppUsers GetById(string id);
     }
 }

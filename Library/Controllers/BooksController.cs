@@ -2,9 +2,7 @@
 using Library.Utility;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 
 namespace Library.Controllers
 {
@@ -20,7 +18,7 @@ namespace Library.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index(int pageNumber = 1, int pageSize = 8)
+        public IActionResult CustomPaged(int pageNumber = 1, int pageSize = 8)
         {
             var books = _iUnitOfWork.BookRepository.GetBooksWithAuthors().ToList();
             var result = PaginateResult.PageResults(books, pageNumber, pageSize);
@@ -29,18 +27,11 @@ namespace Library.Controllers
 
         }
 
-        public IActionResult DataTable()
+        public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult Data()
-        {
-            var applicationPath = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.FullName);
-            // var data = System.IO.File.ReadAllLines(applicationPath + @"\Data\userData.json");
-
-            return View("Data", applicationPath);
-        }
 
 
     }

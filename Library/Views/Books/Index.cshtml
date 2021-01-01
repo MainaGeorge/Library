@@ -1,64 +1,93 @@
-﻿@model cloudscribe.Pagination.Models.PagedResult<Library.Entities.Book>
+﻿@{
+    Layout = "_DataTableLayout";
 
-
-@{
-    Layout = "_Layout";
-    ViewData["Controller"] = "Books";
-    ViewData["Action"] = "Index";
 }
+<link href="~/lib/datatables/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/css/site.css" />
 
-
-<table id="table" class="table table-striped table-bordered mb-4">
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Author</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var book in Model.Data)
-        {
-            var disabled = !book.IsAvailable ? "isDisabled btn-danger" : "btn-success";
-            var enabled = book.IsAvailable ? "isDisabled btn-danger" : "btn-success";
-        
-            <tr>
-                <td>@book.Title</td>
-                <td>@book.Author.FirstName @book.Author.LastName</td>
-                <td>
-                    <a id="@book.Id" onclick='borrowOrReturn("borrowBook", @book.Id)' class="btn btn-sm @disabled">Borrow</a>
-                    <a id="@book.Id" onclick='borrowOrReturn("returnBook", @book.Id)' class="btn btn-sm @enabled }">Return</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-
-</table>
-
-<div class="text-center d-flex justify-content-center align-items-center">
-    <partial name="_PaginationPartial" view-data="ViewData" model="Model" />
+<div class="container">
+    <br />
+    <div style="width:90%; margin:0 auto;">
+        <table id="tableData" class="table table-striped table-bordered" width="100%">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
 </div>
+
 
 @section Scripts
 {
-    <script type="text/javascript" src="js/borrow.js"></script>
+    <script src="~/lib/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="~/lib/datatables/js/dataTables.bootstrap4.min.js"></script>
     <script>
-    
-        function borrowOrReturn(action, id) {
-            const url = `https://localhost:44399/api/book/${action}/${id}`;
-    
+        var dataTable;
+
+        $(document).ready(function () {
+            LoadDataTable();
+        });
+
+        function LoadDataTable() {
+            dataTable = $("#tableData").DataTable({
+                pageLength: 8,
+                "ajax": {
+                    "processing": true,
+                    "url": "/api/book",
+                    "type": "GET",
+                    "datatype": "json",
+                    "dataSrc": ""
+                },
+
+                "columns": [
+                    { "data": "title", "name": "title", "autoWidth": true },
+                    { "data": "author.firstName", "name": "author", "autoWidth": true },
+                    {
+                        "data": { isAvailable: "isAvailable", id: "id" },
+                        "render": function (data, row) {
+                            return `<div class="text-center">
+                                                    <a onclick=BorrowOrReturn("/api/book/borrowBook/${data.id}") class='btn ${data.isAvailable ? 'btn-success' : 'btn-danger isDisabled'}'>
+                                                        Borrow
+                                                    </a>
+                                                    </div>
+                                                    `;
+                        }
+                    },
+                    {
+                        "data": { isAvailable: "isAvailable", id: "id" },
+                        "render": function (data, row) {
+                            return `<div class="text-center">
+                                                    <a onclick=BorrowOrReturn("/api/book/returnBook/${data.id}") class='btn ${!data.isAvailable ? 'btn-success' : 'btn-danger isDisabled'}'>
+                                                        Return
+                                                    </a>
+                                                    </div>`;
+                        }
+                    }
+                ]
+            });
+        }
+
+
+        function BorrowOrReturn(url) {
             $.ajax({
                 type: "GET",
                 url: url,
                 success: function (data) {
                     if (data.success) {
-                        location.reload();
+                        dataTable.ajax.reload(null, false);
                     } else {
-                        alert("fail");
+                        alert("error");
                     }
                 }
             });
         }
-    
     </script>
 }
+
