@@ -1,0 +1,82 @@
+﻿@{
+    Layout = "_DataTableLayout";
+
+}
+<link href="~/lib/datatables/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/css/site.css" />
+
+<div class="container">
+    <br />
+    <div style="width:90%; margin:0 auto;">
+        <table id="usersTable" class="table table-striped table-bordered" width="100%">
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script src="~/lib/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="~/lib/datatables/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+        var dataTable;
+
+        $(document).ready(function () {
+            LoadDataTable();
+        });
+
+        function LoadDataTable() {
+            dataTable = $("#usersTable").DataTable({
+                pageLength: 8,
+                "ajax": {
+                    "processing": true,
+                    "url": "/users/GetUsers",
+                    "type": "GET",
+                    "datatype": "json",
+                    "dataSrc": ""
+                },
+
+                "columns": [
+                    { "data": "firstName", "autoWidth": true },
+                    { "data": "lastName", "autoWidth": true },
+                    {
+                        "data": "id",
+                        "render": function (data) {
+                            return `<div class="text-center">
+                                                        <a onclick=Delete("api/book/users/${data}") class='btn btn-danger btn-lg' style="cursor: pointer">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </a>
+                                            </div>`;
+                        }
+                    }
+                ]
+            });
+        }
+
+
+        function Delete(url) {
+            $.ajax({
+                type: "DELETE",
+                url: url,
+                success: function (data) {
+                    if (data.success) {
+                        dataTable.ajax.reload(null, false);
+                        alert(data.message);
+                    } else {
+                        alert(data.message);
+                    }
+                }
+            });
+        }
+    </script>
+}
+

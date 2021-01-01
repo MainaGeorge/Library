@@ -1,11 +1,10 @@
-﻿using Library.Data;
+﻿using System;
+using Library.Data;
 using Library.Models;
 using Library.Services.IRepository;
-using Library.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Library.Controllers
@@ -24,14 +23,7 @@ namespace Library.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
         }
-        public IActionResult Index(int pageNumber = 1, int pageSize = 8)
-        {
-            var users = _unitOfWork.UserRepository.GetAll().ToList();
-
-            var result = PaginateResult.PageResults(users, pageNumber, pageSize);
-
-            return View(result);
-        }
+        
 
         [HttpGet]
         public IActionResult Register()
@@ -64,7 +56,8 @@ namespace Library.Controllers
 
             await _signInManager.SignInAsync(appUser, false);
 
-            return RedirectToAction(nameof(Index), "Books");
+            return RedirectToAction("Index", "Books");
+
         }
 
         [HttpGet]
