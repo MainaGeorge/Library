@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 namespace Library.Controllers
 {
     [AllowAnonymous]
-    public class AccountsController : Controller
+    public class AccountController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
 
-        public AccountsController(IUnitOfWork unitOfWork, UserManager<IdentityUser> userManager,
+        public AccountController(IUnitOfWork unitOfWork, UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager)
         {
             _unitOfWork = unitOfWork;
