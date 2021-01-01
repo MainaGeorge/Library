@@ -2,11 +2,11 @@
 using Library.Models;
 using Library.Services.IRepository;
 using Library.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Library.Controllers
 {
@@ -100,7 +100,7 @@ namespace Library.Controllers
         {
             await _signInManager.SignOutAsync();
 
-            return RedirectToAction(nameof(Index), "Books");
+            return RedirectToAction(nameof(Index), "Home");
         }
 
 
