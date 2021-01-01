@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Library.Data;
+﻿using Library.Data;
 using Library.Services.IRepository;
 
 namespace Library.Services.Repository
@@ -7,12 +6,10 @@ namespace Library.Services.Repository
     public class UserRepository : Repository<ApplicationUser>, IUserRepository
     {
         private readonly AppDbContext _context;
-        private readonly IMapper _mapper;
 
-        public UserRepository(AppDbContext context, IMapper mapper) : base(context)
+        public UserRepository(AppDbContext context) : base(context)
         {
             _context = context;
-            _mapper = mapper;
         }
 
 
