@@ -1,6 +1,9 @@
-﻿using Library.Services.IRepository;
+﻿using cloudscribe.Pagination.Models;
+using Library.Entities;
+using Library.Services.IRepository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace Library.Controllers
 {
@@ -13,10 +16,26 @@ namespace Library.Controllers
         {
             _iUnitOfWork = iUnitOfWork;
         }
-        public IActionResult Index()
+        public IActionResult Index(int pageNumber = 1, int pageSize = 4)
         {
-            var model = _iUnitOfWork.AuthorRepository.GetAuthorWithBooks();
-            return View(model);
+
+            var skipItems = (pageNumber * pageSize) - pageSize;
+            var books = _iUnitOfWork.AuthorRepository.GetAuthorWithBooks().ToList();
+            var query = books.Skip(skipItems).Take(pageSize);
+            var result = new PagedResult<Author>()
+            {
+                Data = query.ToList(),
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalItems = books.Count()
+
+            };
+            return View(result);
+        }
+        [HttpGet]
+        public IActionResult GetAuthors()
+        {
+            return Ok(_iUnitOfWork.AuthorRepository.GetAuthorWithBooks());
         }
     }
 }

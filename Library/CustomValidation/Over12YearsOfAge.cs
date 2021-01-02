@@ -1,7 +1,6 @@
-﻿using Library.Data;
+﻿using Library.Models;
 using System;
 using System.ComponentModel.DataAnnotations;
-using Library.Models;
 
 namespace Library.CustomValidation
 {
@@ -15,7 +14,7 @@ namespace Library.CustomValidation
 
             return age >= 12
                 ? ValidationResult.Success
-                : new ValidationResult("you must be at least 18 years old to have an account");
+                : new ValidationResult("you must be at least 12 years old to have an account");
         }
     }
 }
