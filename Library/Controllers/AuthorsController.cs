@@ -1,6 +1,6 @@
-﻿using cloudscribe.Pagination.Models;
-using Library.Entities;
+﻿using Library.Models;
 using Library.Services.IRepository;
+using Library.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
@@ -16,26 +16,27 @@ namespace Library.Controllers
         {
             _iUnitOfWork = iUnitOfWork;
         }
-        public IActionResult Index(int pageNumber = 1, int pageSize = 4)
-        {
 
-            var skipItems = (pageNumber * pageSize) - pageSize;
-            var books = _iUnitOfWork.AuthorRepository.GetAuthorWithBooks().ToList();
-            var query = books.Skip(skipItems).Take(pageSize);
-            var result = new PagedResult<Author>()
-            {
-                Data = query.ToList(),
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                TotalItems = books.Count()
-
-            };
-            return View(result);
-        }
         [HttpGet]
-        public IActionResult GetAuthors()
+        public IActionResult Index(int pageNumber = 1)
         {
-            return Ok(_iUnitOfWork.AuthorRepository.GetAuthorWithBooks());
+            var authors = _iUnitOfWork.AuthorRepository.GetAuthorWithBooks().ToList();
+            var pagingInfo = new PaginationDetails()
+            {
+                TotalItems = authors.Count(),
+                CurrentPage = pageNumber,
+                ItemsPerPage = AppConstants.ItemsPerPage,
+                Url = "/Authors/Index"
+            };
+
+            var itemsToSkip = (pageNumber * AppConstants.ItemsPerPage) - AppConstants.ItemsPerPage;
+            var dataToDisplay = authors.Skip(itemsToSkip).Take(AppConstants.ItemsPerPage);
+
+            var viewModel = new AuthorViewModel() { Authors = dataToDisplay, PageModel = pagingInfo };
+
+            return View(viewModel);
         }
+
+
     }
 }

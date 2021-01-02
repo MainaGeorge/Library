@@ -23,7 +23,7 @@ namespace Library.TagHelpers
             for (var i = 1; i <= PageModel.TotalPages; i++)
             {
                 var aTag = new TagBuilder("a");
-                var url = PageModel.Url.Replace(":", i.ToString());
+                var url = $"{PageModel.Url}?pageNumber={i}";
                 aTag.Attributes["href"] = url;
                 aTag.AddCssClass(PageClass);
 
