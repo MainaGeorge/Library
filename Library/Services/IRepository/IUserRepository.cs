@@ -1,4 +1,5 @@
 ﻿using Library.Data;
+using Library.Entities;
 
 namespace Library.Services.IRepository
 {
