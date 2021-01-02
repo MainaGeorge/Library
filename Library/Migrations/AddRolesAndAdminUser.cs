@@ -37,7 +37,8 @@ namespace Library.Migrations
                     await roleManager.CreateAsync(new IdentityRole(role));
             }
 
-            await AddRegularUsers(userManager, Users);
+            if (!await context.ApplicationUsers.AnyAsync(cancellationToken: cancellationToken))
+                await AddRegularUsers(userManager, Users);
 
             var admin = await userManager.FindByEmailAsync("admin@gmail.com") ?? await CreateUser(userManager);
 

@@ -53,21 +53,20 @@
                         "data": { isAvailable: "isAvailable", id: "id" },
                         "render": function (data, row) {
                             return `<div class="text-center">
-                                                                                <a onclick=BorrowOrReturn("api/book/borrowBook/${data.id}") class='btn ${data.isAvailable ? 'btn-success' : 'btn-danger isDisabled'}'>
-                                                                                    Borrow
-                                                                                </a>
-                                                                                </div>
-                                                                                `;
+                                    <a onclick=BorrowOrReturn("api/book/borrowBook/${data.id}") class='btn ${data.isAvailable ? 'btn-success' : 'btn-danger isDisabled'}'>
+                                        Borrow
+                                    </a>
+                                    </div>`;
                         }
                     },
                     {
                         "data": { isAvailable: "isAvailable", id: "id" },
                         "render": function (data, row) {
                             return `<div class="text-center">
-                                                                                <a onclick=BorrowOrReturn("/api/book/returnBook/${data.id}") class='btn ${!data.isAvailable ? 'btn-success' : 'btn-danger isDisabled'}'>
-                                                                                    Return
-                                                                                </a>
-                                                                                </div>`;
+                                <a onclick=BorrowOrReturn("/api/book/returnBook/${data.id}") class='btn ${!data.isAvailable ? 'btn-success' : 'btn-danger isDisabled'}'>
+                                    Return
+                                </a>
+                                </div>`;
                         }
                     }
                 ]
