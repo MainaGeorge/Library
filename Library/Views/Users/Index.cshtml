@@ -52,10 +52,10 @@
                         "data": "id",
                         "render": function (data) {
                             return `<div class="text-center">
-                                                        <a onclick=Delete("api/book/users/${data}") class='btn btn-danger btn-lg' style="cursor: pointer">
-                                                            <i class="fas fa-trash-alt"></i>
-                                                        </a>
-                                            </div>`;
+                                                            <a onclick=Delete("api/book/users/${data}") class='btn btn-danger btn-lg' style="cursor: pointer">
+                                                                <i class="fas fa-trash-alt"></i>
+                                                            </a>
+                                                </div>`;
                         }
                     }
                 ]
@@ -70,7 +70,14 @@
                 success: function (data) {
                     if (data.success) {
                         dataTable.ajax.reload(null, false);
-                        alert(data.message);
+                        swal({
+                            title: "success",
+                            text: data.message,
+                            type: "success",
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Ok",
+                            closeOnConfirm: true
+                        });
                     } else {
                         alert(data.message);
                     }

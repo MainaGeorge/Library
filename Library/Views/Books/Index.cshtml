@@ -53,21 +53,21 @@
                         "data": { isAvailable: "isAvailable", id: "id" },
                         "render": function (data, row) {
                             return `<div class="text-center">
-                                                                        <a onclick=BorrowOrReturn("api/book/borrowBook/${data.id}") class='btn ${data.isAvailable ? 'btn-success' : 'btn-danger isDisabled'}'>
-                                                                            Borrow
-                                                                        </a>
-                                                                        </div>
-                                                                        `;
+                                                                                <a onclick=BorrowOrReturn("api/book/borrowBook/${data.id}") class='btn ${data.isAvailable ? 'btn-success' : 'btn-danger isDisabled'}'>
+                                                                                    Borrow
+                                                                                </a>
+                                                                                </div>
+                                                                                `;
                         }
                     },
                     {
                         "data": { isAvailable: "isAvailable", id: "id" },
                         "render": function (data, row) {
                             return `<div class="text-center">
-                                                                        <a onclick=BorrowOrReturn("/api/book/returnBook/${data.id}") class='btn ${!data.isAvailable ? 'btn-success' : 'btn-danger isDisabled'}'>
-                                                                            Return
-                                                                        </a>
-                                                                        </div>`;
+                                                                                <a onclick=BorrowOrReturn("/api/book/returnBook/${data.id}") class='btn ${!data.isAvailable ? 'btn-success' : 'btn-danger isDisabled'}'>
+                                                                                    Return
+                                                                                </a>
+                                                                                </div>`;
                         }
                     }
                 ]
@@ -82,7 +82,14 @@
                 success: function (data) {
                     if (data.success) {
                         dataTable.ajax.reload(null, false);
-                        alert(data.message);
+                        swal({
+                            title: "success",
+                            text: data.message,
+                            type: "success",
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Ok",
+                            closeOnConfirm: true
+                        });
                     } else {
                         alert(data.message);
                     }
