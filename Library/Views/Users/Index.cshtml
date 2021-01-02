@@ -52,10 +52,10 @@
                         "data": "id",
                         "render": function (data) {
                             return `<div class="text-center">
-                                                            <a onclick=Delete("api/book/users/${data}") class='btn btn-danger btn-lg' style="cursor: pointer">
-                                                                <i class="fas fa-trash-alt"></i>
-                                                            </a>
-                                                </div>`;
+                                                                <a onclick=Delete("api/book/users/${data}") class='btn btn-danger btn-lg' style="cursor: pointer">
+                                                                    <i class="fas fa-trash-alt"></i>
+                                                                </a>
+                                                    </div>`;
                         }
                     }
                 ]
@@ -64,25 +64,31 @@
 
 
         function Delete(url) {
-            $.ajax({
-                type: "DELETE",
-                url: url,
-                success: function (data) {
-                    if (data.success) {
-                        dataTable.ajax.reload(null, false);
-                        swal({
-                            title: "success",
-                            text: data.message,
-                            type: "success",
-                            confirmButtonColor: "#DD6B55",
-                            confirmButtonText: "Ok",
-                            closeOnConfirm: true
-                        });
-                    } else {
-                        alert(data.message);
-                    }
-                }
-            });
+
+            swal({
+                title: "Are you sure you want to delete this user?",
+                text: "You will not be able to restore the content!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: true
+            },
+                function () {
+
+                    $.ajax({
+                        type: "DELETE",
+                        url: url,
+                        success: function (data) {
+                            if (data.success) {
+                                dataTable.ajax.reload(null, false);
+                                toastr.success(data.message);
+                            } else {
+                                alert(data.message);
+                            }
+                        }
+                    });
+                });
         }
     </script>
 }
