@@ -1,4 +1,5 @@
 using Library.Data;
+using Library.Migrations;
 using Library.Services.IRepository;
 using Library.Services.Repository;
 using Microsoft.AspNetCore.Builder;
@@ -44,6 +45,7 @@ namespace Library
                 .AddCookie(options =>
                 {
                     options.LoginPath = "/Account/Login/";
+                    options.AccessDeniedPath = "/Account/AccessDenied";
                 });
 
             services.AddIdentity<IdentityUser, IdentityRole>()
@@ -58,6 +60,8 @@ namespace Library
                 opt.Password.RequireNonAlphanumeric = false;
             });
 
+            services.AddHostedService<AddRolesAndAdminUser>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -70,10 +74,11 @@ namespace Library
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
             app.UseHttpsRedirection();
+
             app.UseStaticFiles();
 
             app.UseRouting();

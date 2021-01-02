@@ -1,10 +1,10 @@
-﻿using System;
-using Library.Data;
+﻿using Library.Data;
 using Library.Models;
-using Library.Services.IRepository;
+using Library.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace Library.Controllers
@@ -12,18 +12,21 @@ namespace Library.Controllers
     [AllowAnonymous]
     public class AccountController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
 
-        public AccountController(IUnitOfWork unitOfWork, UserManager<IdentityUser> userManager,
+        public AccountController(UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager)
         {
-            _unitOfWork = unitOfWork;
             _userManager = userManager;
             _signInManager = signInManager;
         }
-        
+
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
 
         [HttpGet]
         public IActionResult Register()
@@ -46,6 +49,7 @@ namespace Library.Controllers
                 DateOfBirth = model.DateOfBirth
             };
 
+
             var createdUser = await _userManager.CreateAsync(appUser, model.Password);
 
             if (!createdUser.Succeeded)
@@ -54,11 +58,20 @@ namespace Library.Controllers
                 return View(model);
             }
 
+            var addUserToRole = await _userManager.AddToRoleAsync(appUser, AppConstants.RegularUser);
+
+            if (!addUserToRole.Succeeded)
+            {
+                AddModelErrors(addUserToRole);
+                return View(model);
+            }
+
             await _signInManager.SignInAsync(appUser, false);
 
             return RedirectToAction("Index", "Books");
 
         }
+
 
         [HttpGet]
         public IActionResult Login()
@@ -89,6 +102,8 @@ namespace Library.Controllers
             return View(model);
 
         }
+
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();

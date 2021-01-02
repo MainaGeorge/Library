@@ -1,6 +1,10 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Http
+@using Library.Utility
 
 @inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@inject IHttpContextAccessor HttpContextAccessor
 
 <nav class="navbar navbar-expand-sm navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
     <div class="container">
@@ -16,17 +20,29 @@
                     <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                 </li>
 
-                @if (SignInManager.IsSignedIn(User))
+                @if (User.IsInRole($"{AppConstants.AdminUser}") || User.IsInRole($"{AppConstants.RegularUser}"))
                 {
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Books" asp-action="Index">Books</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Authors" asp-action="Index">Authors</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">Users</a>
-                    </li>
+
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Books" asp-action="Index">Books</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Authors" asp-action="Index">Authors</a>
+                        </li>
+                    }
+
+                }
+
+                @if (User.IsInRole($"{AppConstants.AdminUser}"))
+
+                {
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">Users</a>
+                        </li>
+                    }
+
                 }
 
             </ul>

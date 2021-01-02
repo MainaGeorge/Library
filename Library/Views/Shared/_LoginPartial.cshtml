@@ -3,10 +3,12 @@
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 
+
 <ul class="navbar nav">
 
     @if (SignInManager.IsSignedIn(User))
     {
+
         <li class="nav-item">
             <a href="#" class="nav-link">@UserManager.GetUserName(User)</a>
         </li>

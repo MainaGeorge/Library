@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Library.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "regular")]
     public class BooksController : Controller
     {
         private readonly IUnitOfWork _iUnitOfWork;

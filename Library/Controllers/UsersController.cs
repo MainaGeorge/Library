@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Library.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "admin")]
+
     public class UsersController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

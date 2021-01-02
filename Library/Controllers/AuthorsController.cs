@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Library.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "regular")]
     public class AuthorsController : Controller
     {
         private readonly IUnitOfWork _iUnitOfWork;
