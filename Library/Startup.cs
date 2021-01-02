@@ -32,7 +32,6 @@ namespace Library
                     opt.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                     opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 });
-            services.AddCloudscribePagination();
             services.AddDbContext<AppDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
@@ -44,7 +43,7 @@ namespace Library
             services.AddAuthentication()
                 .AddCookie(options =>
                 {
-                    options.LoginPath = "/Accounts/Login/";
+                    options.LoginPath = "/Account/Login/";
                 });
 
             services.AddIdentity<IdentityUser, IdentityRole>()
