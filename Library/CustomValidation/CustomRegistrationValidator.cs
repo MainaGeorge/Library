@@ -10,8 +10,6 @@ namespace Library.CustomValidation
         {
             var registrationModel = (RegisterViewModel)validationContext.ObjectInstance;
 
-
-
             if (string.IsNullOrWhiteSpace(registrationModel.FirstName))
                 return new ValidationResult("first name is a required field");
 
