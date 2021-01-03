@@ -2,10 +2,12 @@
 using Library.Services.IRepository;
 using Library.Utility;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Library.Controllers
@@ -16,11 +18,14 @@ namespace Library.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UsersController(IUnitOfWork unitOfWork, UserManager<IdentityUser> userManager)
+        public UsersController(IUnitOfWork unitOfWork,
+            UserManager<IdentityUser> userManager, IHttpContextAccessor httpContextAccessor)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
+            _httpContextAccessor = httpContextAccessor;
         }
         public IActionResult Index()
         {
@@ -29,7 +34,9 @@ namespace Library.Controllers
 
         public async Task<IActionResult> UsersWithRoles(int pageNumber = 1)
         {
-            var users = _unitOfWork.UserRepository.GetAll().ToList();
+            var users = _unitOfWork.UserRepository
+                .GetAll()
+                .ToList();
 
             var itemsToSkip = (pageNumber * AppConstants.ItemsPerPage) - AppConstants.ItemsPerPage;
             var dataToDisplay = users.Skip(itemsToSkip).Take(AppConstants.ItemsPerPage);
@@ -57,7 +64,10 @@ namespace Library.Controllers
         }
         public IActionResult GetUsers()
         {
-            return Ok(_unitOfWork.UserRepository.GetAll());
+            var loggedUserId = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var users = _unitOfWork.UserRepository.GetAll().Where(u => u.Id != loggedUserId);
+
+            return Ok(users);
         }
     }
 }
