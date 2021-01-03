@@ -11,7 +11,6 @@ namespace Library.EntityConfigurations
         {
             builder.Property(p => p.FirstName).IsRequired();
             builder.Property(p => p.LastName).IsRequired();
-            builder.Property(p => p.DateOfBirth).IsRequired().HasColumnType("Date");
 
 
             builder.HasMany(p => p.Books)
