@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Library.Entities
 {
@@ -16,5 +17,8 @@ namespace Library.Entities
         [Required]
         [DataType(DataType.Date)]
         public DateTime DateOfBirth { get; set; }
+
+        [NotMapped]
+        public bool IsAdmin { get; set; }
     }
 }

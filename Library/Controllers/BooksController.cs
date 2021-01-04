@@ -34,17 +34,6 @@ namespace Library.Controllers
             return Ok(_iUnitOfWork.BookRepository.BorrowableBooks());
         }
 
-        [HttpGet("BooksByMe")]
-        public IActionResult BooksByMe()
-        {
-            var loggedUserId = _contextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrWhiteSpace(loggedUserId))
-                return Ok(null);
-
-            var booksByMe = _iUnitOfWork.BookRepository.BooksByMe(loggedUserId);
-
-            return Ok(booksByMe);
-        }
         public IActionResult BooksBorrowedByMe()
         {
             return View();
@@ -59,29 +48,25 @@ namespace Library.Controllers
                 return View(Enumerable.Empty<Book>());
             }
 
+            var booksBorrowed = new List<Book>();
+
             var loggedUserId = _contextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var loggedUser = _iUnitOfWork.UserRepository.GetById(loggedUserId);
 
             if (loggedUser == null)
                 return View("Error");
 
-            var booksBorrowed = new List<Book>();
-
-            if (books.Any())
+            foreach (var newBook in books.Select(bookId => _iUnitOfWork.BookRepository.GetById(bookId)))
             {
-
-                foreach (var newBook in books.Select(bookId => _iUnitOfWork.BookRepository.GetById(bookId)))
-                    newBook.BorrowerId = loggedUserId;
-
-                loggedUser.Books = booksBorrowed;
-                _contextAccessor.HttpContext.Session.SetString(AppConstants.ShoppingCart, "");
-                _iUnitOfWork.SaveChanges();
-
+                newBook.BorrowerId = loggedUserId;
+                booksBorrowed.Add(newBook);
             }
 
-            var userWithBorrowedBooks = _iUnitOfWork.UserRepository.GetById(loggedUserId);
+            _contextAccessor.HttpContext.Session.SetString(AppConstants.ShoppingCart, "");
+            _iUnitOfWork.SaveChanges();
 
-            return View(userWithBorrowedBooks.Books);
+
+            return View(booksBorrowed);
 
 
         }

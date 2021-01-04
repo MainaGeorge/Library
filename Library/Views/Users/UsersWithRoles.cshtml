@@ -19,6 +19,22 @@
                 <td>@user.ApplicationUser.FirstName</td>
                 <td>@user.ApplicationUser.LastName</td>
                 <td>@user.Roles</td>
+                <td>
+
+                    @if (!user.ApplicationUser.IsAdmin)
+                    {
+                        <a class="btn btn-success" asp-action="MakeAdmin"
+                           asp-controller="Users" asp-route-userId="@user.ApplicationUser.Id"
+                           asp-route-pageNumber="@Model.PageModel.CurrentPage">Make Admin</a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-danger" asp-action="RevokeAdmin"
+                           asp-controller="Users" asp-route-userId="@user.ApplicationUser.Id"
+                           asp-route-pageNumber="@Model.PageModel.CurrentPage">Revoke Admin</a>
+                    }
+
+                </td>
 
             </tr>
         }

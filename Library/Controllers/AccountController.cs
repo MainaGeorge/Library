@@ -1,5 +1,4 @@
-﻿using Library.Data;
-using Library.Models;
+﻿using Library.Models;
 using Library.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -94,6 +93,8 @@ namespace Library.Controllers
             }
 
             var signIn = await _signInManager.PasswordSignInAsync(user, model.Password, false, false);
+
+            
 
             if (signIn.Succeeded)
                 return RedirectToAction(nameof(Index), controllerName: "Books");

@@ -47,7 +47,11 @@ namespace Library.Controllers
             {
                 var roles = await _userManager.GetRolesAsync(user);
 
+                if (roles.Contains(AppConstants.AdminUser))
+                    user.IsAdmin = true;
+
                 model.Add(new UserWithRolesModel() { Roles = string.Join(", ", roles), ApplicationUser = user });
+
             }
             var pagingInfo = new PaginationDetails()
             {
@@ -76,6 +80,47 @@ namespace Library.Controllers
             return Ok(users);
         }
 
-        
+
+        public async Task<IActionResult> MakeAdmin(string userId, int? pageNumber)
+        {
+            if (string.IsNullOrWhiteSpace(userId))
+                return View("Error");
+
+            pageNumber ??= 1;
+
+            var user = _unitOfWork.UserRepository.GetById(userId);
+
+            if (user == null)
+                return View("Error");
+
+            var makingAdmin = await _userManager.AddToRoleAsync(user, AppConstants.AdminUser);
+
+            if (makingAdmin.Succeeded) return RedirectToAction(nameof(UsersWithRoles),
+                "Users", new { pageNumber });
+
+            return View("Error");
+
+
+        }
+
+        public async Task<IActionResult> RevokeAdmin(string userId, int? pageNumber)
+        {
+            if (string.IsNullOrWhiteSpace(userId))
+                return View("Error");
+
+            pageNumber ??= 1;
+
+            var user = _unitOfWork.UserRepository.GetById(userId);
+
+            if (user == null)
+                return View("Error");
+
+            var revokingAdmin = await _userManager.RemoveFromRoleAsync(user, AppConstants.AdminUser);
+
+            if (revokingAdmin.Succeeded) return RedirectToAction(nameof(UsersWithRoles),
+                "Users", new { pageNumber });
+
+            return View("Error");
+        }
     }
 }
