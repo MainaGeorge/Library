@@ -52,13 +52,15 @@
                         "data": { isAvailable: "isAvailable", id: "id" },
                         "render": function (data, row) {
                             return `<div class="text-center">
-                                                    <a onclick=returnBook("/api/book/returnBook/${data.id}") class='btn btn-success'>
-                                                        Return
-                                                    </a>
-                                                    </div>`;
+                                            <a onclick=returnBook("/api/book/returnBook/${data.id}") class='btn btn-success'>
+                                                Return
+                                            </a>
+                                            </div>`;
                         }
                     }
-                ]
+                ],
+                "language": { "emptyTable": "You have not borrowed any books yet! feel free to borrow any available books from our library" },
+                "width": "100%"
             });
         }
 

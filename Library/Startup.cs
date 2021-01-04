@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System;
 
 namespace Library
 {
@@ -37,6 +38,12 @@ namespace Library
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            services.AddSession(opt =>
+            {
+                opt.IdleTimeout = TimeSpan.FromMinutes(10);
+            });
+
             services.AddTransient<IBookRepository, BookRepository>();
             services.AddTransient<IAuthorRepository, AuthorRepository>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
@@ -46,9 +53,12 @@ namespace Library
                 {
                     options.LoginPath = "/Account/Login/";
                     options.AccessDeniedPath = "/Account/AccessDenied";
+                    options.Cookie.IsEssential = true;
+                    options.Cookie.HttpOnly = true;
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(15);
                 });
-            services.AddSession();
             services.AddMemoryCache();
+
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<AppDbContext>();
