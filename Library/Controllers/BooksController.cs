@@ -31,13 +31,33 @@ namespace Library.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            return Ok(_iUnitOfWork.BookRepository.GetBooksWithAuthors());
+            return Ok(_iUnitOfWork.BookRepository.BorrowableBooks());
         }
 
+        [HttpGet("BooksByMe")]
+        public IActionResult BooksByMe()
+        {
+            var loggedUserId = _contextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrWhiteSpace(loggedUserId))
+                return Ok(null);
+
+            var booksByMe = _iUnitOfWork.BookRepository.BooksByMe(loggedUserId);
+
+            return Ok(booksByMe);
+        }
+        public IActionResult BooksBorrowedByMe()
+        {
+            return View();
+        }
         public IActionResult BorrowBooks()
         {
             var books =
                 _contextAccessor.HttpContext.Session.RetrieveFromSession<List<int>>(AppConstants.ShoppingCart);
+
+            if (books == null || !books.Any())
+            {
+                return View(Enumerable.Empty<Book>());
+            }
 
             var loggedUserId = _contextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var loggedUser = _iUnitOfWork.UserRepository.GetById(loggedUserId);
@@ -47,7 +67,7 @@ namespace Library.Controllers
 
             var booksBorrowed = new List<Book>();
 
-            if (books != null && books.Any())
+            if (books.Any())
             {
 
                 foreach (var newBook in books.Select(bookId => _iUnitOfWork.BookRepository.GetById(bookId)))

@@ -16,6 +16,11 @@ namespace Library.Services.Repository
             _context = context;
         }
 
+        public IEnumerable<Book> BorrowableBooks()
+        {
+            return _context.Books.Where(b => b.IsAvailable).Include(b => b.Author);
+        }
+
         public IEnumerable<Book> GetBooksByAuthor(int authorId)
         {
             return _context.Books.Where(b => b.AuthorId == authorId).ToList();
@@ -35,6 +40,14 @@ namespace Library.Services.Repository
                 .Books
                 .Include(b => b.Borrower)
                 .Where(b => !string.IsNullOrWhiteSpace(b.BorrowerId)).ToList();
+        }
+
+        public IEnumerable<Book> BooksByMe(string userId)
+        {
+            return _context
+                .Books
+                .Where(b => !string.IsNullOrWhiteSpace(b.BorrowerId) && b.BorrowerId == userId)
+                .Include(b => b.Author);
         }
     }
 }

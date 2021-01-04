@@ -8,7 +8,7 @@
 <div class="container">
     <br />
     <div style="width:90%; margin:0 auto;">
-        <table id="tableData" class="table table-striped table-dark table-bordered" width="100%">
+        <table id="myBooks" class="table table-striped table-dark table-bordered" width="100%">
             <thead>
                 <tr>
                     <th>Title</th>
@@ -32,17 +32,14 @@
 
         $(document).ready(function () {
             LoadDataTable();
-            const booksToBorrow = $("#books");
-
-            console.log(booksToBorrow[0].innerHTML);
         });
 
         function LoadDataTable() {
-            dataTable = $("#tableData").DataTable({
+            dataTable = $("#myBooks").DataTable({
                 pageLength: 8,
                 "ajax": {
                     "processing": true,
-                    "url": "/books/getall",
+                    "url": "/api/book/booksByMe",
                     "type": "GET",
                     "datatype": "json",
                     "dataSrc": ""
@@ -55,10 +52,10 @@
                         "data": { isAvailable: "isAvailable", id: "id" },
                         "render": function (data, row) {
                             return `<div class="text-center">
-                                                <a onclick=borrowBook("api/book/borrowBook/${data.id}") class='btn btn-success'>
-                                                    Borrow
-                                                </a>
-                                                </div>`;
+                                                    <a onclick=returnBook("/api/book/returnBook/${data.id}") class='btn btn-success'>
+                                                        Return
+                                                    </a>
+                                                    </div>`;
                         }
                     }
                 ]
@@ -66,16 +63,13 @@
         }
 
 
-        function borrowBook(url) {
+        function returnBook(url) {
             $.ajax({
                 type: "GET",
                 url: url,
                 success: function (data) {
                     if (data.success) {
                         dataTable.ajax.reload(null, false);
-                        const booksToBorrow = $("#books");
-                        const value = parseInt(booksToBorrow[0].innerHTML) + 1;
-                        booksToBorrow[0].innerHTML = value;
                         swal({
                             title: "success",
                             text: data.message,

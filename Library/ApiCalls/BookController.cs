@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Security.Claims;
 
 namespace Library.ApiCalls
 {
@@ -79,6 +80,18 @@ namespace Library.ApiCalls
             _unitOfWork.SaveChanges();
 
             return Ok(new { Message = "user deleted successfully", success = true });
+        }
+
+        [HttpGet("BooksByMe")]
+        public IActionResult BooksByMe()
+        {
+            var loggedUserId = _contextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrWhiteSpace(loggedUserId))
+                return Ok(null);
+
+            var booksByMe = _unitOfWork.BookRepository.BooksByMe(loggedUserId);
+
+            return Ok(booksByMe);
         }
     }
 }
