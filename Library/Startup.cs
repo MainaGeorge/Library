@@ -47,7 +47,8 @@ namespace Library
                     options.LoginPath = "/Account/Login/";
                     options.AccessDeniedPath = "/Account/AccessDenied";
                 });
-
+            services.AddSession();
+            services.AddMemoryCache();
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<AppDbContext>();
@@ -85,7 +86,7 @@ namespace Library
 
             app.UseAuthentication();
             app.UseAuthorization();
-
+            app.UseSession();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

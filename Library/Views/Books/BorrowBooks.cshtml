@@ -1,0 +1,26 @@
+﻿@using System.Security.Cryptography
+@model IEnumerable<Library.Entities.Book>
+
+
+@{
+    Layout = "_Layout";
+}
+
+
+@if (Model.Any())
+{
+    <h3 class="text-success">You have borrowed the following books</h3>
+
+    <ul class="list-group">
+        @foreach (var book in Model)
+        {
+            <li class="list-group-item">@book.Title</li>
+        }
+    </ul>
+
+
+}
+else
+{
+    <h3 class="text-success">Please select books to borrow from the book menu</h3>
+}

@@ -32,23 +32,33 @@
                         </li>
                     }
 
+
+                    <li style="color: black">
+                        <a asp-controller="Books" asp-action="BorrowBooks" class="nav-link text-dark">
+                            @{
+                                var count = HttpContextAccessor.HttpContext.Session.RetrieveFromSession<List<int>>(AppConstants.ShoppingCart)?.Count() ?? 0;
+                            }
+                            <i class="fas fa-book"></i> <span class="text-danger" id="books">@count</span>
+                        </a>
+                    </li>
+
                 }
 
                 @if (User.IsInRole($"{AppConstants.AdminUser}"))
 
                 {
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">Users</a>
-                        </li>
-                    }
 
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="UsersWithRoles">Roles</a>
-                        </li>
-                    }
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">Users</a>
+                    </li>
 
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="UsersWithRoles">Roles</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="BorrowedBooks">Borrowed Books</a>
+                    </li>
                 }
 
             </ul>

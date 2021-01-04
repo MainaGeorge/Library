@@ -62,6 +62,12 @@ namespace Library.Controllers
             return View(viewModel);
 
         }
+
+        public IActionResult BorrowedBooks()
+        {
+            var books = _unitOfWork.BookRepository.GetBorrowedBooks();
+            return View(books);
+        }
         public IActionResult GetUsers()
         {
             var loggedUserId = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -69,5 +75,7 @@ namespace Library.Controllers
 
             return Ok(users);
         }
+
+        
     }
 }

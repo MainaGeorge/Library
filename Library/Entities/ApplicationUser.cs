@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Identity;
 
 namespace Library.Entities
 {
@@ -11,7 +11,7 @@ namespace Library.Entities
 
         public string LastName { get; set; }
 
-        public IEnumerable<Book> Books { get; set; } = new List<Book>();
+        public IList<Book> Books { get; set; } = new List<Book>();
 
         [Required]
         [DataType(DataType.Date)]

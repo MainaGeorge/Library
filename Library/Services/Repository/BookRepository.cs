@@ -28,5 +28,13 @@ namespace Library.Services.Repository
                 .OrderBy(b => b.IsAvailable)
                 .ToList();
         }
+
+        public IEnumerable<Book> GetBorrowedBooks()
+        {
+            return _context
+                .Books
+                .Include(b => b.Borrower)
+                .Where(b => !string.IsNullOrWhiteSpace(b.BorrowerId)).ToList();
+        }
     }
 }

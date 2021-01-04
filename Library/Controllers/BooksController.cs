@@ -1,6 +1,12 @@
-﻿using Library.Services.IRepository;
+﻿using Library.Entities;
+using Library.Services.IRepository;
+using Library.Utility;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 
 namespace Library.Controllers
 {
@@ -8,10 +14,13 @@ namespace Library.Controllers
     public class BooksController : Controller
     {
         private readonly IUnitOfWork _iUnitOfWork;
+        private readonly IHttpContextAccessor _contextAccessor;
 
-        public BooksController(IUnitOfWork iUnitOfWork)
+        public BooksController(IUnitOfWork iUnitOfWork,
+            IHttpContextAccessor contextAccessor)
         {
             _iUnitOfWork = iUnitOfWork;
+            _contextAccessor = contextAccessor;
         }
 
         public IActionResult Index()
@@ -25,36 +34,37 @@ namespace Library.Controllers
             return Ok(_iUnitOfWork.BookRepository.GetBooksWithAuthors());
         }
 
-        [HttpGet("{bookId:int}")]
-
-        public IActionResult ReturnBook(int bookId)
+        public IActionResult BorrowBooks()
         {
-            var book = _iUnitOfWork.BookRepository.GetById(bookId);
+            var books =
+                _contextAccessor.HttpContext.Session.RetrieveFromSession<List<int>>(AppConstants.ShoppingCart);
 
-            if (book == null)
-                return Ok(new { message = $"could not find such a book", success = false });
+            var loggedUserId = _contextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var loggedUser = _iUnitOfWork.UserRepository.GetById(loggedUserId);
 
-            book.IsAvailable = true;
-            _iUnitOfWork.SaveChanges();
+            if (loggedUser == null)
+                return View("Error");
 
-            return Ok(new { message = $"successfully returned book {book.Title}", success = true });
+            var booksBorrowed = new List<Book>();
+
+            if (books != null && books.Any())
+            {
+
+                foreach (var newBook in books.Select(bookId => _iUnitOfWork.BookRepository.GetById(bookId)))
+                    newBook.BorrowerId = loggedUserId;
+
+                loggedUser.Books = booksBorrowed;
+                _contextAccessor.HttpContext.Session.SetString(AppConstants.ShoppingCart, "");
+                _iUnitOfWork.SaveChanges();
+
+            }
+
+            var userWithBorrowedBooks = _iUnitOfWork.UserRepository.GetById(loggedUserId);
+
+            return View(userWithBorrowedBooks.Books);
+
+
         }
-        [HttpGet("{bookId:int}")]
-        public IActionResult BorrowBook(int bookId)
-        {
-            var book = _iUnitOfWork.BookRepository.GetById(bookId);
-
-            if (book == null)
-                return Ok(new { success = false, message = "can not find the book" });
-
-            book.IsAvailable = false;
-
-            _iUnitOfWork.SaveChanges();
-
-            return Ok(new { success = true, message = $"successfully borrowed the book {book.Title}" });
-        }
-
-
 
     }
 }

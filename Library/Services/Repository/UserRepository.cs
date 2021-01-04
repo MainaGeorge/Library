@@ -1,6 +1,8 @@
 ﻿using Library.Data;
 using Library.Entities;
 using Library.Services.IRepository;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Library.Services.Repository
 {
@@ -16,7 +18,12 @@ namespace Library.Services.Repository
 
         public ApplicationUser GetById(string id)
         {
-            return _context.ApplicationUsers.Find(id);
+            return _context
+                .ApplicationUsers
+                .Where(u => u.Id == id)
+                .Include(b => b.Books)
+                .FirstOrDefault();
+
         }
     }
 }

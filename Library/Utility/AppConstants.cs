@@ -6,5 +6,7 @@
         public static string RegularUser { get; set; } = "regular";
 
         public static int ItemsPerPage { get; set; } = 4;
+
+        public static string ShoppingCart { get; set; } = "shoppingCart";
     }
 }

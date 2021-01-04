@@ -15,7 +15,7 @@
                     <th>Last Name</th>
                     <th>Username</th>
                     <th>Email</th>
-                    <th>Date of Birth</th>
+                    <th>Books Borrowed</th>
                     <th></th>
                 </tr>
             </thead>
@@ -53,15 +53,15 @@
                     { "data": "lastName", "autoWidth": true },
                     { "data": "userName", "autoWidth": true },
                     { "data": "email", "autoWidth": true },
-                    { "data": "dateOfBirth", "autoWidth": true },
+                    { "data": "books.length", "autoWidth": true },
                     {
                         "data": "id",
                         "render": function (data) {
                             return `<div class="text-center btn-group">
-                                                                    <a onclick=Delete("api/book/users/${data}") class='btn btn-danger btn-lg' style="cursor: pointer">
-                                                                        <i class="fas fa-trash-alt"></i>
-                                                                    </a>
-                                            </div>`;
+                                                                        <a onclick=Delete("api/book/users/${data}") class='btn btn-danger btn-lg' style="cursor: pointer">
+                                                                            <i class="fas fa-trash-alt"></i>
+                                                                        </a>
+                                                </div>`;
                         }
                     }
                 ]

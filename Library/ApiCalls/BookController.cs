@@ -1,7 +1,9 @@
 ﻿using Library.Services.IRepository;
+using Library.Utility;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
+using System.Collections.Generic;
 
 namespace Library.ApiCalls
 {
@@ -11,28 +13,52 @@ namespace Library.ApiCalls
     public class BookController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IHttpContextAccessor _contextAccessor;
 
-        public BookController(IUnitOfWork unitOfWork)
+        public BookController(IUnitOfWork unitOfWork, IHttpContextAccessor contextAccessor)
         {
             _unitOfWork = unitOfWork;
+            _contextAccessor = contextAccessor;
         }
 
-        [HttpGet("{bookAction}/{bookId:int}")]
-        public IActionResult BorrowBook(int bookId, string bookAction)
+        [HttpGet("borrowBook/{bookId:int}")]
+        public IActionResult BorrowBook(int bookId)
         {
             var book = _unitOfWork.BookRepository.GetById(bookId);
 
             if (book == null)
-                return Ok(new { success = false, message = "failed to return the book" });
+                return Ok(new { success = false, message = "can not find the book" });
 
-            var bookActionValue = bookAction.Equals("returnBook", StringComparison.CurrentCultureIgnoreCase);
-            book.IsAvailable = bookActionValue;
+            var booksToBorrow =
+                _contextAccessor.HttpContext.Session
+                    .RetrieveFromSession<List<int>>(AppConstants.ShoppingCart) ?? new List<int>();
 
-            var returnMessage = bookActionValue ? "returned" : "borrowed";
+            booksToBorrow.Add(bookId);
+
+            _contextAccessor.HttpContext.Session.SaveObjectInSession(AppConstants.ShoppingCart, booksToBorrow);
+
+            book.IsAvailable = false;
 
             _unitOfWork.SaveChanges();
 
-            return Ok(new { success = true, message = $"successfully {returnMessage} the book {book.Title}" });
+            return Ok(new { success = true, message = $"successfully borrowed the book {book.Title}" });
+        }
+
+        [HttpGet("returnBook/{bookId:int}")]
+
+        public IActionResult ReturnBook(int bookId)
+        {
+            var book = _unitOfWork.BookRepository.GetById(bookId);
+
+            if (book == null)
+                return Ok(new { message = $"could not find such a book", success = false });
+
+            book.IsAvailable = true;
+            book.BorrowerId = null;
+
+            _unitOfWork.SaveChanges();
+
+            return Ok(new { message = $"successfully returned book {book.Title}", success = true });
         }
 
         [HttpGet]

@@ -9,5 +9,7 @@ namespace Library.Services.IRepository
 
         IEnumerable<Book> GetBooksWithAuthors();
 
+        IEnumerable<Book> GetBorrowedBooks();
+
     }
 }
